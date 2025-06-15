@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bukit Biru Tenggarong</title>
+  <link href="style.css" rel="stylesheet" />
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    #loading {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: #fff url('assets/loading.gif') center center no-repeat;
+      z-index: 9999;
+    }
+    .snowflake {
+      position: fixed;
+      top: -10px;
+      color: #fff;
+      font-size: 1em;
+      user-select: none;
+      z-index: 999;
+      animation: fall 10s linear infinite;
+    }
+    @keyframes fall {
+      to {
+        transform: translateY(100vh);
+      }
+    }
+  </style>
+</head>
+<body onload="hideLoading()">
+  <div id="loading"></div>
+
+  <div class="language-switcher">
+    <button onclick="setLanguage('id')">ID</button>
+    <button onclick="setLanguage('en')">EN</button>
+    <button onclick="toggleDarkMode()">🌓</button>
+  </div>
+
+  <header>
+    <h1 data-i18n="title">Bukit Biru Tenggarong</h1>
+    <p data-i18n="subtitle">Simulasi Alam & Petualangan Virtual di Dunia Roblox</p>
+    <a class="button" href="https://www.roblox.com/share?code=5f36f268a5bd7d4ea5ef9f48f6d0688e" data-i18n="playNow">Mainkan Sekarang</a>
+  </header>
+
+  <section class="about" data-aos="fade-up">
+    <h2 data-i18n="aboutTitle">Tentang Lokasi</h2>
+    <p data-i18n="aboutText">Air Terjun Bukit Biru adalah objek wisata alam yang terletak di Desa Sumbersari, Kecamatan Loa Kulu, Kabupaten Kutai Kartanegara. Tersembunyi di tengah hutan dengan ketinggian 15 meter dan kolam dingin alami, tempat ini menjadi destinasi favorit pecinta alam. Meski aksesnya cukup menantang, Bukit Biru menawarkan ketenangan dan pesona hutan tropis yang cocok untuk berkemah dan menjelajah.</p>
+  </section>
+
+  <section class="gameplay" data-aos="fade-up">
+    <h2 data-i18n="gameplayTitle">Pengalaman di Roblox</h2>
+    <p data-i18n="gameplayText">Bukit Biru Tenggarong" menawarkan simulasi pendakian gunung yang realistis dengan jalur berbatu, hutan rindang, dan rintangan sulit. Didesain untuk memberikan pengalaman virtual mendaki yang seru dan imersif bagi para pemain Roblox.</p>
+  </section>
+
+  <section class="developer" data-aos="fade-up">
+    <h2 data-i18n="devTitle">Developer</h2>
+    <div class="profile">
+      <img src="assets/profile-avatar.png" alt="Developer">
+      <div class="info">
+        <h3>nnabil_r - Roblox Creator (17 Tahun)</h3>
+        <p data-i18n="devText">Seorang developer muda yang aktif menciptakan pengalaman dunia virtual di Roblox. Memiliki passion besar terhadap alam dan teknologi, serta menggabungkannya menjadi proyek kreatif seperti Bukit Biru.</p>
+        <a href="https://www.instagram.com/nnabil_r">Instagram</a><br/>
+        <a href="https://www.roblox.com/users/roblox-user-id">Profil Roblox</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="gallery" data-aos="fade-up">
+    <h2 data-i18n="galleryTitle">Galeri Gambar</h2>
+    <div class="gallery-grid">
+      <img src="assets/screenshot1.png" alt="Gameplay 1">
+      <img src="assets/screenshot2.png" alt="Gameplay 2">
+    </div>
+  </section>
+
+  <section class="map" data-aos="fade-up">
+    <h2 data-i18n="mapTitle">Lokasi Bukit Biru</h2>
+    <div style="text-align: center; margin-top: 20px;">
+      <a href="https://maps.app.goo.gl/YmnFLaUT2q6yVVuo7?g_st=com.google.maps.preview.copy" target="_blank" class="button">
+        📍 Lihat di Google Maps
+      </a>
+    </div>
+  </section>
+
+  <section class="other-games" data-aos="fade-up">
+  <h2>Game Lain oleh nnabil_r</h2>
+  <div style="text-align:center;margin-top:20px;">
+    <a href="https://www.roblox.com/share?code=2ee4fc116555a648ac8f8eac9de96721&type=ExperienceDetails&stamp=1750011508164"
+       target="_blank"
+       style="display:inline-block;padding:12px 24px;background-color:#10b981;color:#fff;text-decoration:none;border-radius:8px;font-weight:600;transition:background 0.3s;">
+      🌲 Jelajahi Dunia Lain
+    </a>
+  </div>
+</section>
+
+<footer class="footer">
+    &copy; 2025 Bukit Biru Project by Nabil Developer. All Rights Reserved.
+  </footer>
+
+  <script src="script.js"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init();
+    function hideLoading() {
+      document.getElementById("loading").style.display = "none";
+    }
+
+    // Efek salju ringan
+    for (let i = 0; i < 30; i++) {
+      const snowflake = document.createElement('div');
+      snowflake.classList.add('snowflake');
+      snowflake.innerHTML = '❄';
+      snowflake.style.left = Math.random() * 100 + 'vw';
+      snowflake.style.animationDuration = (Math.random() * 5 + 5) + 's';
+      snowflake.style.fontSize = (Math.random() * 10 + 10) + 'px';
+      document.body.appendChild(snowflake);
+    }
+
+    // Form kirim (tanpa backend)
+    document.getElementById('contact-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert("Terima kasih! Pesan Anda telah terkirim.");
+      this.reset();
+    });
+  </script>
+
+
+<div id="chatbox" style="display:none;position:fixed;bottom:80px;right:20px;background:#fff;border:1px solid #ccc;padding:10px;width:250px;z-index:9999;">
+  <div id="chat-log" style="max-height:200px;overflow-y:auto;margin-bottom:10px;"></div>
+  <input type="text" id="chat-input" placeholder="Ketik pesan..." style="width:100%;padding:5px;">
+  <button onclick="sendMessage()" style="margin-top:5px;width:100%;">Kirim</button>
+</div>
+<button onclick="toggleChatbot()" style="position:fixed;bottom:20px;right:20px;padding:10px 15px;border:none;background:#1d4ed8;color:#fff;border-radius:50%;">💬</button>
+
+<script>
+
+function playNatureSound() {
+  const audio = new Audio('assets/nature.mp3');
+  audio.loop = true;
+  audio.volume = 0.3;
+  audio.play();
+}
+
+
+function toggleChatbot() {
+  const chatbox = document.getElementById("chatbox");
+  chatbox.style.display = chatbox.style.display === "block" ? "none" : "block";
+}
+function sendMessage() {
+  const input = document.getElementById("chat-input");
+  const message = input.value.trim();
+  if (message) {
+    const chatLog = document.getElementById("chat-log");
+    const userMsg = document.createElement("div");
+    userMsg.textContent = "👤 " + message;
+    chatLog.appendChild(userMsg);
+    const botMsg = document.createElement("div");
+    botMsg.textContent = "🤖 Terima kasih atas pesanmu!";
+    chatLog.appendChild(botMsg);
+    input.value = "";
+  }
+}
+
+document.getElementById('newsletter-form')?.addEventListener('submit', function(e) {
+  e.preventDefault();
+  alert("Terima kasih telah berlangganan!");
+  this.reset();
+});
+playNatureSound();
+</script>
+
+</body>
+</html>
