@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BorneoRoblox | Robux Premium</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #1a1a2e; color: #e5e5e5; }
+        .bg-primary { background-color: #16213e; }
+        .text-primary { color: #0f4c75; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); }
+        .modal.active { display: flex; align-items: center; justify-content: center; }
+        .admin-panel { display: none; }
+        .admin-panel.active { display: block; }
+        .btn-primary { background-color: #0f4c75; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; border: none; cursor: pointer; }
+        .btn-primary:hover { background-color: #0d3a5c; }
+        .btn-success { background-color: #10b981; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; border: none; cursor: pointer; }
+        .btn-success:hover { background-color: #059669; }
+        .card { background-color: #0f3460; padding: 1.5rem; border-radius: 0.75rem; margin: 1rem 0; }
+        .input-field { background-color: #16213e; border: 1px solid #3b82f6; color: white; padding: 0.5rem; border-radius: 0.5rem; width: 100%; margin: 0.5rem 0; }
+        .input-field:focus { outline: none; border-color: #60a5fa; }
+    </style>
+</head>
+<body>
+    <header class="bg-primary text-white">
+        <div class="max-w-7xl mx-auto px-4 py-5 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <img src="BORNEO.png" alt="BorneoRoblox" class="w-10 h-10 rounded-full" onerror="this.style.display='none'">
+                <h1 class="text-xl font-bold">BorneoRoblox</h1>
+            </div>
+            <nav class="flex items-center space-x-6">
+                <a href="#paket" class="hover:text-blue-300">Paket</a>
+                <a href="#form" class="hover:text-blue-300">Pesan</a>
+                <a href="#riwayat" class="hover:text-blue-300">Riwayat</a>
+                <div id="userMenu" class="flex items-center space-x-4">
+                    <button id="loginBtn" onclick="showLoginModal()" class="btn-primary">Login</button>
+                    <button id="registerBtn" onclick="showRegisterModal()" class="btn-primary">Daftar</button>
+                    <div id="userInfo" class="hidden items-center space-x-4">
+                        <span id="welcomeText"></span>
+                        <button onclick="logout()" class="text-red-400 hover:text-red-300">Logout</button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div id="loginModal" class="modal">
+        <div class="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-md">
+            <h3 class="text-2xl font-bold mb-6 text-center text-white">Login</h3>
+            <form id="loginForm">
+                <input type="text" id="loginUsername" placeholder="Username" required class="input-field">
+                <input type="password" id="loginPassword" placeholder="Password" required class="input-field">
+                <button type="submit" class="btn-primary w-full mt-4">Login</button>
+            </form>
+            <button onclick="closeModal('loginModal')" class="w-full mt-4 text-gray-400 hover:text-gray-300">Batal</button>
+        </div>
+    </div>
+
+    <div id="registerModal" class="modal">
+        <div class="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-md">
+            <h3 class="text-2xl font-bold mb-6 text-center text-white">Daftar Akun</h3>
+            <form id="registerForm">
+                <input type="text" id="regUsername" placeholder="Username" required class="input-field">
+                <input type="email" id="regEmail" placeholder="Email" required class="input-field">
+                <input type="password" id="regPassword" placeholder="Password" required class="input-field">
+                <button type="submit" class="btn-success w-full mt-4">Daftar</button>
+            </form>
+            <button onclick="closeModal('registerModal')" class="w-full mt-4 text-gray-400 hover:text-gray-300">Batal</button>
+        </div>
+    </div>
+
+    <section class="bg-gradient-to-r from-blue-800 to-purple-800 text-white py-20 text-center px-4">
+        <h2 class="text-4xl font-bold mb-4">Top Up Robux Premium 💎</h2>
+        <p class="text-lg mb-2">Tersedia 50 hingga 10.000 Robux</p>
+        <p class="text-sm italic mb-6">⚠️ Proses Robux dapat memakan waktu 5–7 hari kerja</p>
+        <a href="#form" class="btn-primary">Top Up Sekarang</a>
+    </section>
+
+    <section id="adminPanel" class="admin-panel py-10 px-6 bg-red-900 border-l-4 border-red-500">
+        <div class="max-w-4xl mx-auto">
+            <h3 class="text-2xl font-bold text-white mb-6 text-center">🔐 Admin Panel</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="card">
+                    <h4 class="text-lg font-semibold mb-4 text-white">Update Stok & Harga</h4>
+                    <input type="number" id="currentStock" placeholder="Stok Saat Ini" readonly class="input-field">
+                    <input type="number" id="newStock" placeholder="Stok Baru" min="0" class="input-field">
+                    <input type="number" id="robuxPrice" placeholder="Harga per Robux (Rp)" step="0.01" class="input-field">
+                    <button onclick="updateStock()" class="btn-primary w-full">Update</button>
+                </div>
+                
+                <div class="card">
+                    <h4 class="text-lg font-semibold mb-4 text-white">Update Links</h4>
+                    <input type="text" id="waLink" placeholder="Link WhatsApp" class="input-field">
+                    <input type="text" id="tiktokLink" placeholder="Link TikTok" class="input-field">
+                    <input type="text" id="instagramLink" placeholder="Link Instagram" class="input-field">
+                    <input type="text" id="tutorialLink" placeholder="Link Tutorial Gamepass" class="input-field">
+                    <button onclick="updateLinks()" class="btn-primary w-full">Update Links</button>
+                </div>
+                
+                <div class="card">
+                    <h4 class="text-lg font-semibold mb-4 text-white">Statistik Pesanan</h4>
+                    <div class="text-white space-y-2">
+                        <div class="flex justify-between">
+                            <span>Total Pesanan:</span>
+                            <span id="totalOrders" class="font-bold">0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Robux Terjual:</span>
+                            <span id="totalRobuxSold" class="font-bold">0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Total Pendapatan:</span>
+                            <span id="totalRevenue" class="font-bold">Rp 0</span>
+                        </div>
+                    </div>
+                    <button onclick="resetStats()" class="btn-primary w-full mt-4">Reset Statistik</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-10 px-6 text-center">
+        <h3 class="text-2xl font-bold mb-4">Tutorial Membuat Gamepass</h3>
+        <p class="mb-4">Ikuti langkah mudah melalui video TikTok berikut:</p>
+        <a href="#" id="tutorialLinkDisplay" target="_blank" class="text-blue-400 underline hover:text-blue-300">Tonton Tutorial &rarr;</a>
+    </section>
+
+    <section class="py-10 px-6 text-center">
+        <h3 class="text-2xl font-bold mb-4">Stok Robux Tersedia</h3>
+        <p class="text-lg font-semibold" id="stok-display">Memuat stok...</p>
+    </section>
+
+    <section id="paket" class="py-16 px-6 max-w-6xl mx-auto">
+        <h3 class="text-3xl font-bold text-center mb-12">Pilih Paket Robux</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
+            <div class="card text-center border-t-4 border-green-500">
+                <h4 class="text-xl font-semibold mb-2 text-white">500 Robux</h4>
+                <p class="text-green-400 text-2xl font-bold mb-4" id="price500">Rp 57.500</p>
+                <button onclick="pilihPaket(500)" class="btn-success">Pilih</button>
+            </div>
+            <div class="card text-center border-t-4 border-blue-500">
+                <h4 class="text-xl font-semibold mb-2 text-white">1000 Robux</h4>
+                <p class="text-blue-400 text-2xl font-bold mb-4" id="price1000">Rp 115.000</p>
+                <button onclick="pilihPaket(1000)" class="btn-primary">Pilih</button>
+            </div>
+            <div class="card text-center border-t-4 border-purple-500">
+                <h4 class="text-xl font-semibold mb-2 text-white">2000 Robux</h4>
+                <p class="text-purple-400 text-2xl font-bold mb-4" id="price2000">Rp 230.000</p>
+                <button onclick="pilihPaket(2000)" class="btn-primary" style="background-color: #7c3aed;">Pilih</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="form" class="py-16 px-6">
+        <div class="max-w-xl mx-auto card">
+            <h3 class="text-2xl font-bold mb-6 text-center text-white">Formulir Pemesanan</h3>
+            <div id="loginRequired" class="text-center py-8">
+                <p class="text-gray-400 mb-4">Silakan login terlebih dahulu untuk melakukan pemesanan</p>
+                <button onclick="showLoginModal()" class="btn-primary">Login</button>
+            </div>
+            <form id="orderForm" class="hidden">
+                <input type="text" id="username" placeholder="Username Roblox" required class="input-field">
+                <input type="number" id="jumlahRobux" min="50" max="10000" value="500" class="input-field">
+                <input type="text" id="hargaTotal" readonly value="Rp 57.500" class="input-field">
+                <select id="metode" class="input-field">
+                    <option value="QRIS">QRIS</option>
+                    <option value="Dana">Dana</option>
+                </select>
+                <button type="submit" class="btn-success w-full">Kirim ke WhatsApp</button>
+            </form>
+        </div>
+    </section>
+
+    <section id="riwayat" class="py-12 px-6">
+        <div class="max-w-2xl mx-auto">
+            <h3 class="text-xl font-bold mb-4">Riwayat Pemesanan Anda</h3>
+            <div id="historyList" class="text-sm">
+                <p class="text-gray-400 italic">Belum ada pemesanan</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-6xl mx-auto text-center">
+            <h4 class="text-xl font-semibold mb-4">Bantuan & Ikuti Kami</h4>
+            <div class="flex justify-center gap-6 mb-4">
+                <a href="#" id="waLinkDisplay" target="_blank" class="text-green-400 hover:text-green-300">WhatsApp</a>
+                <a href="#" id="tiktokLinkDisplay" target="_blank" class="text-pink-400 hover:text-pink-300">TikTok</a>
+                <a href="#" id="instagramLinkDisplay" target="_blank" class="text-pink-400 hover:text-pink-300">Instagram</a>
+            </div>
+            <p class="text-sm text-gray-400">&copy; 2025 BorneoRoblox. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        let currentUser = null;
+        let currentStock = 5000;
+        let robuxPrice = 115; // per robux
+        let orderStats = { totalOrders: 0, totalRobuxSold: 0, totalRevenue: 0 };
+        let links = {
+            wa: "https://wa.me/6281549764588",
+            tiktok: "https://tiktok.com/@nnabil_r",
+            instagram: "https://instagram.com/nnabil_r",
+            tutorial: "https://vt.tiktok.com/ZSBbF6YYD/"
+        };
+
+        const form = document.getElementById("orderForm");
+        const jumlahRobuxInput = document.getElementById("jumlahRobux");
+        const hargaTotalInput = document.getElementById("hargaTotal");
+        const historyList = document.getElementById("historyList");
+        const stokDisplay = document.getElementById("stok-display");
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            updateHarga();
+            tampilkanRiwayat();
+            loadStok();
+            updateStatsDisplay();
+            loadLinks();
+        });
+
+        function showLoginModal() { document.getElementById('loginModal').classList.add('active'); }
+        function showRegisterModal() { document.getElementById('registerModal').classList.add('active'); }
+        function closeModal(modalId) { document.getElementById(modalId).classList.remove('active'); }
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+            
+            if (users[username] && users[username].password === password) {
+                currentUser = { username: username, email: users[username].email, isAdmin: username.toLowerCase() === 'nabil' };
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                updateUserInterface();
+                closeModal('loginModal');
+                showNotification(currentUser.isAdmin ? 'Welcome Admin!' : 'Login berhasil!', 'success');
+            } else {
+                showNotification('Username atau password salah!', 'error');
+            }
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('regUsername').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+            
+            if (users[username]) {
+                showNotification('Username sudah digunakan!', 'error');
+                return;
+            }
+            users[username] = { email: email, password: password, registeredAt: new Date().toISOString() };
+            localStorage.setItem('users', JSON.stringify(users));
+            closeModal('registerModal');
+            showNotification('Akun berhasil dibuat! Silakan login.', 'success');
+            document.getElementById('registerForm').reset();
+        });
+
+        function loadUserData() {
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                updateUserInterface();
+            }
+            const savedStock = localStorage.getItem('robuxStock');
+            if (savedStock) currentStock = parseInt(savedStock);
+            const savedPrice = localStorage.getItem('robuxPrice');
+            if (savedPrice) robuxPrice = parseFloat(savedPrice);
+            const savedStats = localStorage.getItem('orderStats');
+            if (savedStats) orderStats = JSON.parse(savedStats);
+            const savedLinks = localStorage.getItem('adminLinks');
+            if (savedLinks) links = JSON.parse(savedLinks);
+        }
+
+        function updateUserInterface() {
+            const loginBtn = document.getElementById('loginBtn');
+            const registerBtn = document.getElementById('registerBtn');
+            const userInfo = document.getElementById('userInfo');
+            const welcomeText = document.getElementById('welcomeText');
+            const orderForm = document.getElementById('orderForm');
+            const loginRequired = document.getElementById('loginRequired');
+            const adminPanel = document.getElementById('adminPanel');
+
+            if (currentUser) {
+                loginBtn.style.display = 'none';
+                registerBtn.style.display = 'none';
+                userInfo.classList.remove('hidden');
+                userInfo.classList.add('flex');
+                welcomeText.textContent = `Hi, ${currentUser.username}`;
+                orderForm.classList.remove('hidden');
+                loginRequired.style.display = 'none';
+                
+                if (currentUser.isAdmin) {
+                    adminPanel.classList.add('active');
+                    document.getElementById('currentStock').value = currentStock;
+                    document.getElementById('robuxPrice').value = robuxPrice;
+                    document.getElementById('waLink').value = links.wa;
+                    document.getElementById('tiktokLink').value = links.tiktok;
+                    document.getElementById('instagramLink').value = links.instagram;
+                    document.getElementById('tutorialLink').value = links.tutorial;
+                }
+            } else {
+                loginBtn.style.display = 'block';
+                registerBtn.style.display = 'block';
+                userInfo.classList.add('hidden');
+                orderForm.classList.add('hidden');
+                loginRequired.style.display = 'block';
+                adminPanel.classList.remove('active');
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            updateUserInterface();
+            showNotification('Logout berhasil!', 'success');
+        }
+
+        function loadStok() {
+            if (currentStock > 0) {
+                stokDisplay.innerHTML = `<span class="text-green-400 font-bold">${currentStock.toLocaleString()} Robux</span> tersedia`;
+            } else {
+                stokDisplay.innerHTML = '<span class="text-red-400 font-bold">Stok habis</span>';
+            }
+        }
+
+        function updateStock() {
+            if (!currentUser || !currentUser.isAdmin) return;
+            const newStock = parseInt(document.getElementById('newStock').value);
+            const newPrice = parseFloat(document.getElementById('robuxPrice').value);
+            if (!isNaN(newStock) && newStock >= 0) {
+                currentStock = newStock;
+                localStorage.setItem('robuxStock', currentStock.toString());
+                loadStok();
+            }
+            if (!isNaN(newPrice) && newPrice > 0) {
+                robuxPrice = newPrice;
+                localStorage.setItem('robuxPrice', robuxPrice.toString());
+                updatePriceDisplay();
+            }
+            showNotification('Data berhasil diperbarui!', 'success');
+            document.getElementById('newStock').value = '';
+        }
+
+        function updateLinks() {
+            if (!currentUser || !currentUser.isAdmin) return;
+            links.wa = document.getElementById('waLink').value || links.wa;
+            links.tiktok = document.getElementById('tiktokLink').value || links.tiktok;
+            links.instagram = document.getElementById('instagramLink').value || links.instagram;
+            links.tutorial = document.getElementById('tutorialLink').value || links.tutorial;
+            localStorage.setItem('adminLinks', JSON.stringify(links));
+            loadLinks();
+            showNotification('Links berhasil diperbarui!', 'success');
+        }
+
+        function loadLinks() {
+            document.getElementById('waLinkDisplay').href = links.wa;
+            document.getElementById('tiktokLinkDisplay').href = links.tiktok;
+            document.getElementById('instagramLinkDisplay').href = links.instagram;
+            document.getElementById('tutorialLinkDisplay').href = links.tutorial;
+        }
+
+        function updatePriceDisplay() {
+            document.getElementById('price500').textContent = `Rp ${(500 * robuxPrice).toLocaleString()}`;
+            document.getElementById('price1000').textContent = `Rp ${(1000 * robuxPrice).toLocaleString()}`;
+            document.getElementById('price2000').textContent = `Rp ${(2000 * robuxPrice).toLocaleString()}`;
+        }
+
+        function resetStats() {
+            if (!currentUser || !currentUser.isAdmin) return;
+            orderStats = { totalOrders: 0, totalRobuxSold: 0, totalRevenue: 0 };
+            localStorage.setItem('orderStats', JSON.stringify(orderStats));
+            updateStatsDisplay();
+            showNotification('Statistik berhasil direset!', 'success');
+        }
+
+        function updateStatsDisplay() {
+            if (currentUser && currentUser.isAdmin) {
+                document.getElementById('totalOrders').textContent = orderStats.totalOrders;
+                document.getElementById('totalRobuxSold').textContent = orderStats.totalRobuxSold.toLocaleString();
+                document.getElementById('totalRevenue').textContent = `Rp ${orderStats.totalRevenue.toLocaleString()}`;
+            }
+        }
+
+        function pilihPaket(robux) {
+            if (!currentUser) {
+                showNotification('Silakan login terlebih dahulu!', 'error');
+                showLoginModal();
+                return;
+            }
+            if (robux > currentStock) {
+                showNotification('Stok tidak mencukupi!', 'error');
+                return;
+            }
+            jumlahRobuxInput.value = robux;
+            updateHarga();
+            document.getElementById('form').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        jumlahRobuxInput.addEventListener('input', function() {
+            updateHarga();
+            validateStock();
+        });
+
+        function updateHarga() {
+            const jumlah = parseInt(jumlahRobuxInput.value) || 0;
+            const harga = Math.round(jumlah * robuxPrice);
+            hargaTotalInput.value = `Rp ${harga.toLocaleString()}`;
+        }
+
+        function validateStock() {
+            const jumlah = parseInt(jumlahRobuxInput.value) || 0;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            
+            if (jumlah > currentStock) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Stok Tidak Mencukupi';
+                submitBtn.style.backgroundColor = '#6b7280';
+            } else {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Kirim ke WhatsApp';
+                submitBtn.style.backgroundColor = '#10b981';
+            }
+        }
+
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            if (!currentUser) return;
+            
+            const username = document.getElementById("username").value.trim();
+            const jumlah = parseInt(jumlahRobuxInput.value);
+            const metode = document.getElementById("metode").value;
+            const harga = Math.round(jumlah * robuxPrice);
+
+            if (!username || jumlah < 50 || jumlah > 10000 || jumlah > currentStock) {
+                showNotification('Data tidak valid!', 'error');
+                return;
+            }
+
+            currentStock -= jumlah;
+            localStorage.setItem('robuxStock', currentStock.toString());
+            
+            orderStats.totalOrders++;
+            orderStats.totalRobuxSold += jumlah;
+            orderStats.totalRevenue += harga;
+            localStorage.setItem('orderStats', JSON.stringify(orderStats));
+
+            const tanggal = new Date().toLocaleDateString('id-ID');
+            const jam = new Date().toLocaleTimeString('id-ID');
+            const pesan = `🎮 *PESANAN ROBUX BARU* 🎮
+
+👤 *Username:* ${username}
+🎁 *Jumlah:* ${jumlah} Robux
+💰 *Harga:* Rp ${harga.toLocaleString()}
+💳 *Metode:* ${metode}
+📅 *Tanggal:* ${tanggal}
+🕒 *Waktu:* ${jam}
+👨‍💼 *Pemesan:* ${currentUser.username}
+
+Mohon diproses ya kak! Terima kasih 🙏`;
+
+            window.open(`${links.wa}?text=${encodeURIComponent(pesan)}`, '_blank');
+
+            const riwayat = JSON.parse(localStorage.getItem(`riwayat_${currentUser.username}`) || "[]");
+            riwayat.unshift({ username, jumlah, harga, metode, tanggal, jam, orderId: Date.now() });
+            if (riwayat.length > 10) riwayat.splice(10);
+            localStorage.setItem(`riwayat_${currentUser.username}`, JSON.stringify(riwayat));
+            
+            tampilkanRiwayat();
+            loadStok();
+            updateStatsDisplay();
+            form.reset();
+            jumlahRobuxInput.value = 500;
+            updateHarga();
+            showNotification('Pesanan berhasil dikirim!', 'success');
+        });
+
+        function tampilkanRiwayat() {
+            if (!currentUser) {
+                historyList.innerHTML = '<p class="text-gray-400 italic">Silakan login untuk melihat riwayat</p>';
+                return;
+            }
+            const riwayat = JSON.parse(localStorage.getItem(`riwayat_${currentUser.username}`) || "[]");
+            if (riwayat.length === 0) {
+                historyList.innerHTML = '<p class="text-gray-400 italic">Belum ada pemesanan</p>';
+                return;
+            }
+            historyList.innerHTML = riwayat.map(pesanan => `
+                <div class="card mb-3 border-l-4 border-blue-500">
+                    <div class="flex justify-between items-start mb-2">
+                        <h4 class="font-semibold text-white">${pesanan.username}</h4>
+                        <span class="text-xs text-gray-400">${pesanan.tanggal} ${pesanan.jam}</span>
+                    </div>
+                    <div class="text-sm text-gray-300">
+                        <p><strong>Jumlah:</strong> ${pesanan.jumlah} Robux</p>
+                        <p><strong>Harga:</strong> Rp ${pesanan.harga.toLocaleString()}</p>
+                        <p><strong>Metode:</strong> ${pesanan.metode}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 ${
+                type === 'success' ? 'bg-green-500 text-white' :
+                type === 'error' ? 'bg-red-500 text-white' :
+                'bg-blue-500 text-white'
+            }`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 3000);
+        }
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) this.classList.remove('active');
+            });
+        });
+
+        setTimeout(() => {
+            if (currentUser) validateStock();
+            updatePriceDisplay();
+        }, 100);
+    </script>
+</body>
+</html>
